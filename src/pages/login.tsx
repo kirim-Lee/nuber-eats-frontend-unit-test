@@ -1,17 +1,17 @@
-import { gql, useMutation } from "@apollo/client";
-import { Helmet } from "react-helmet";
-import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
-import { authTokenVar, isLoggedInVar } from "../apollo";
-import { Button } from "../components/button";
-import { FormError } from "../components/form-error";
-import { LS_TOKEN } from "../constants";
+import { gql, useMutation } from '@apollo/client';
+import { Helmet } from 'react-helmet';
+import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
+import { authTokenVar, isLoggedInVar } from '../apollo';
+import { Button } from '../components/button';
+import { FormError } from '../components/form-error';
+import { LS_TOKEN } from '../constants';
 import {
   LoginMutation,
-  LoginMutationVariables
-} from "../__type_graphql__/LoginMutation";
+  LoginMutationVariables,
+} from '../__type_graphql__/LoginMutation';
 
-const LOGIN_MUTATION = gql`
+export const LOGIN_MUTATION = gql`
   mutation LoginMutation($loginInput: LoginInput!) {
     login(input: $loginInput) {
       ok
@@ -27,15 +27,19 @@ interface ILoginForm {
 }
 
 export const Login = () => {
-  const { register, getValues, errors, handleSubmit, formState } = useForm<
-    ILoginForm
-  >({
-    mode: "onChange"
+  const {
+    register,
+    getValues,
+    errors,
+    handleSubmit,
+    formState,
+  } = useForm<ILoginForm>({
+    mode: 'onChange',
   });
 
   const onCompleted = (data: LoginMutation) => {
     const {
-      login: { ok, token }
+      login: { ok, token },
     } = data;
 
     if (ok && token) {
@@ -45,18 +49,18 @@ export const Login = () => {
     }
   };
   const variables = {
-    loginInput: getValues()
+    loginInput: getValues(),
   };
   const [loginMutation, { data: loginMutationResult, loading }] = useMutation<
     LoginMutation,
     LoginMutationVariables
   >(LOGIN_MUTATION, {
     variables,
-    onCompleted
+    onCompleted,
   });
 
   const _submit = () => {
-    if (!loading) loginMutation();
+    loginMutation();
   };
 
   return (
@@ -66,7 +70,7 @@ export const Login = () => {
       </Helmet>
       <div className="bg-white shadow-2xl rounded-lg w-full max-w-3xl mx-5 flex justify-between">
         <div className="hidden sm:block sm:w-7/12 bg-gradient-to-tr from-green-400 to-blue-400  flex justify-center items-center rounded-tl-lg rounded-bl-lg">
-          {" "}
+          {' '}
           {/*Right Side*/}
           <div className="w-full h-full flex flex-col justify-center text-white text-right p-6">
             <h3 className="text-4xl font-medium">Wanna listen?</h3>
@@ -76,7 +80,7 @@ export const Login = () => {
           </div>
         </div>
         <div className="w-full sm:w-5/12 py-16">
-          {" "}
+          {' '}
           {/*Left Side*/}
           <h3 className="text-blue-400 text-3xl text-center mb-10 font-medium">
             Nuber-Podcasts
@@ -102,7 +106,7 @@ export const Login = () => {
               </svg>
               <input
                 ref={register({
-                  required: "Email is required!"
+                  required: 'Email is required!',
                 })}
                 className="focus:outline-none pl-2 w-full"
                 name="email"
@@ -130,8 +134,8 @@ export const Login = () => {
               </svg>
               <input
                 ref={register({
-                  required: "Password is required!",
-                  minLength: 10
+                  required: 'Password is required!',
+                  minLength: 10,
                 })}
                 className="focus:outline-none pl-2 w-full"
                 name="password"
@@ -142,7 +146,7 @@ export const Login = () => {
             {errors.password?.message && (
               <FormError errorMessage={errors.password.message} />
             )}
-            {errors.password?.type === "minLength" && (
+            {errors.password?.type === 'minLength' && (
               <FormError errorMessage="Password must be more than 10 characters" />
             )}
 
@@ -158,7 +162,7 @@ export const Login = () => {
             <span className="w-full text-center mt-3 text-sm text-gray-500">
               Don't have an account?
               <br />
-              Create{" "}
+              Create{' '}
               <Link
                 to="/create-account"
                 className="text-blue-400 hover:underline"
