@@ -5,6 +5,16 @@ import { RenderResult } from '@testing-library/react';
 import { createMockClient, MockApolloClient } from 'mock-apollo-client';
 import { Podcasts, ALLPODCASTS_QUERY } from '../podcasts';
 
+const Podcast = {
+  __typename: 'Podcast',
+  id: 2,
+  title: 'pdcast',
+  category: 'podcast category',
+  thumbnailUrl: 'png',
+  description: 'description',
+  rating: 4,
+};
+
 describe('<Podcasts />', () => {
   let mockedClient: MockApolloClient;
   let renderResult: RenderResult;
@@ -18,17 +28,7 @@ describe('<Podcasts />', () => {
               __typename: 'GetAllPodcastsOutput',
               error: null,
               ok: true,
-              podcasts: [
-                {
-                  __typename: 'Podcast',
-                  id: 2,
-                  title: 'pdcast',
-                  category: 'podcast category',
-                  thumbnailUrl: 'png',
-                  description: 'description',
-                  rating: 4,
-                },
-              ],
+              podcasts: [Podcast],
             },
           },
         });
@@ -49,5 +49,9 @@ describe('<Podcasts />', () => {
       expect(document.title).toBe('Home | Nuber-podcasts');
     });
     getByText('podcast category');
+  });
+
+  afterAll(() => {
+    jest.clearAllMocks();
   });
 });

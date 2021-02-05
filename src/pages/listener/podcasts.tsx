@@ -19,7 +19,6 @@ export const ALLPODCASTS_QUERY = gql`
 
 export const Podcasts = () => {
   const { data } = useQuery<getAllPodcastQuery>(ALLPODCASTS_QUERY, {});
-
   return (
     <div>
       <Helmet>
