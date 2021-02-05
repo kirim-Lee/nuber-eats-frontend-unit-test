@@ -134,4 +134,8 @@ describe('<Login />', () => {
 
     expect(getByRole('alert')).toHaveTextContent('mutation error');
   });
+
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
 });

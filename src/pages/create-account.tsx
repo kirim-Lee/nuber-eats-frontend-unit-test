@@ -1,16 +1,16 @@
-import { gql, useMutation } from "@apollo/client";
-import { Helmet } from "react-helmet";
-import { useForm } from "react-hook-form";
-import { Link, useHistory } from "react-router-dom";
-import { Button } from "../components/button";
-import { FormError } from "../components/form-error";
+import { gql, useMutation } from '@apollo/client';
+import { Helmet } from 'react-helmet';
+import { useForm } from 'react-hook-form';
+import { Link, useHistory } from 'react-router-dom';
+import { Button } from '../components/button';
+import { FormError } from '../components/form-error';
 import {
   CreateAccountMutation,
-  CreateAccountMutationVariables
-} from "../__type_graphql__/CreateAccountMutation";
-import { UserRole } from "../__type_graphql__/globalTypes";
+  CreateAccountMutationVariables,
+} from '../__type_graphql__/CreateAccountMutation';
+import { UserRole } from '../__type_graphql__/globalTypes';
 
-const CREATE_ACCOUNT_MUTATION = gql`
+export const CREATE_ACCOUNT_MUTATION = gql`
   mutation CreateAccountMutation($createAccountInput: CreateAccountInput!) {
     createAccount(input: $createAccountInput) {
       ok
@@ -27,40 +27,45 @@ interface ICreateAccountFrom {
 }
 
 export const CreateAccount = () => {
-  const { register, handleSubmit, errors, getValues, formState } = useForm<
-    ICreateAccountFrom
-  >({
-    mode: "onBlur",
+  const {
+    register,
+    handleSubmit,
+    errors,
+    getValues,
+    formState,
+  } = useForm<ICreateAccountFrom>({
+    mode: 'onBlur',
     defaultValues: {
-      role: UserRole.Host
-    }
+      role: UserRole.Host,
+    },
   });
   const history = useHistory();
   const onCompleted = (data: CreateAccountMutation) => {
     const {
-      createAccount: { ok }
+      createAccount: { ok },
     } = data;
 
     if (ok) {
-      alert("Account Created! Log in now!");
-      history.push("/");
+      alert('Account Created! Log in now!');
+      history.push('/');
     }
   };
   const { email, password, role } = getValues();
   const [
     createAccountMutation,
-    { data: createAccountResult, loading }
+    { data: createAccountResult, loading },
   ] = useMutation<CreateAccountMutation, CreateAccountMutationVariables>(
     CREATE_ACCOUNT_MUTATION,
     {
       variables: {
-        createAccountInput: { email, password, role }
+        createAccountInput: { email, password, role },
       },
-      onCompleted
+      onCompleted,
     }
   );
+
   const _submit = () => {
-    if (!loading) createAccountMutation();
+    createAccountMutation();
   };
   return (
     <div className="h-screen flex justify-center items-center bg-gray-50">
@@ -96,12 +101,12 @@ export const CreateAccount = () => {
             ref={register({
               required: {
                 value: true,
-                message: "Email is required!"
+                message: 'Email is required!',
               },
               pattern: {
                 value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                message: "Email address invalid"
-              }
+                message: 'Email address invalid',
+              },
             })}
             className="border-b-2 border-blue-400 py-2 bg-transparent focus:outline-none w-full"
             name="email"
@@ -133,12 +138,12 @@ export const CreateAccount = () => {
             ref={register({
               required: {
                 value: true,
-                message: "Password is required!"
+                message: 'Password is required!',
               },
               minLength: {
                 value: 10,
-                message: "Password must be more than 10 characters"
-              }
+                message: 'Password must be more than 10 characters',
+              },
             })}
             className="border-b-2 border-blue-400 py-2 bg-transparent focus:outline-none w-full"
             name="password"
@@ -147,8 +152,8 @@ export const CreateAccount = () => {
           ></input>
           <input
             ref={register({
-              required: "Password is required!",
-              validate: (value) => value === getValues().password
+              required: 'Password is required!',
+              validate: (value) => value === getValues().password,
             })}
             className="mt-4 border-b-2 border-blue-400 py-2 bg-transparent focus:outline-none w-full"
             name="confirm_password"
@@ -157,6 +162,9 @@ export const CreateAccount = () => {
           ></input>
           {errors.password?.message && (
             <FormError errorMessage={errors.password.message} />
+          )}
+          {errors.confirm_password?.message && (
+            <FormError errorMessage={errors.confirm_password.message} />
           )}
           {errors.confirm_password && (
             <FormError errorMessage="Password not matched" />
@@ -183,6 +191,7 @@ export const CreateAccount = () => {
             ref={register}
             name="role"
             className="border-b-2 border-blue-400 py-2 bg-transparent focus:outline-none"
+            data-testid="role"
           >
             {Object.keys(UserRole).map((role, idx) => (
               <option className="text-black" key={idx}>
@@ -200,7 +209,7 @@ export const CreateAccount = () => {
             <FormError errorMessage={createAccountResult.createAccount.error} />
           )}
           <span className="w-full text-center mt-3 text-sm text-gray-500">
-            Already have an account?{" "}
+            Already have an account?{' '}
             <Link to="/" className="text-blue-400 hover:underline">
               Log in!
             </Link>
